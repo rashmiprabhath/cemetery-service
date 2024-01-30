@@ -34,6 +34,6 @@ async def get_all_graves(db: Session = Depends(get_db)):
 
 
 # fetch grave by name
-@app.get("/graves")
+@app.get("/graves", response_model=list[models.Grave])
 async def get_grave_by_name(name: str, db: Session = Depends(get_db)):
     return crud.get_grave_by_name(db=db, name=name)

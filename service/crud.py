@@ -8,7 +8,8 @@ def get_graves(db: Session, grave_id: int):
 
 
 def get_grave_by_name(db: Session, name: str):
-    return db.query(database_models.Burial).filter(database_models.Burial.name == name).first()
+    tag = '%' + name + '%';
+    return db.query(database_models.Burial).filter(database_models.Burial.name.like(tag)).offset(0).limit(10)
 
 
 def get_graves(db: Session, skip: int = 0, limit: int = 100):
