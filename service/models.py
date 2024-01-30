@@ -10,3 +10,6 @@ class Grave(BaseModel):
     lot: str | None = None
     block: str | None = None
     space: str | None = None
+
+    class Config:
+        orm_mode = True

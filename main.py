@@ -1,8 +1,19 @@
-from fastapi import FastAPI
-from models import Grave
-import data_service
+from fastapi import Depends, FastAPI
+from sqlalchemy.orm import Session
+
+from service import models, database_models, crud
+from service.database import SessionLocal
 
 app = FastAPI()
+
+
+# Dependency
+def get_db():
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
 
 
 @app.get("/")
@@ -11,37 +22,18 @@ async def root():
 
 
 # create grave
-@app.post("/graves")
-async def create_grave(grave: Grave):
-    data_service.create_grave(grave)
-    return {"message": "Grave created"}
+@app.post("/graves", response_model=models.Grave)
+async def create_grave(grave: models.Grave, db: Session = Depends(get_db)):
+    return crud.create_grave(db=db, grave=grave)
 
 
 # fetch all graves
-@app.get("/graves/all")
-async def get_all_graves():
-    return data_service.get_all_graves()
-
-
-# fetch grave by id
-@app.get("/graves/{grave_id}")
-async def get_grave(grave_id: int):
-    return data_service.search_grave_by_id(grave_id)
+@app.get("/graves/all", response_model=list[models.Grave])
+async def get_all_graves(db: Session = Depends(get_db)):
+    return crud.get_graves(db=db)
 
 
 # fetch grave by name
 @app.get("/graves")
-async def get_grave_by_name(name: str):
-    return data_service.search_grave_by_name(name)
-
-
-# update grave
-@app.put("/graves/{grave_id}")
-async def update_grave(grave_id: int):
-    return data_service.update_grave(grave_id)
-
-
-# delete grave
-@app.delete("/graves/{grave_id}")
-async def delete_grave(grave_id: int):
-    return data_service.delete_grave(grave_id)
+async def get_grave_by_name(name: str, db: Session = Depends(get_db)):
+    return crud.get_grave_by_name(db=db, name=name)
