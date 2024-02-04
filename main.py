@@ -1,11 +1,19 @@
 from fastapi import Depends, FastAPI
 from sqlalchemy.orm import Session
 
-from service import models, database_models, crud
+from service import models, crud
 from service.database import SessionLocal
 
-app = FastAPI()
+from fastapi.middleware.cors import CORSMiddleware
 
+app = FastAPI()
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins="*",
+    allow_credentials=False,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 # Dependency
 def get_db():
