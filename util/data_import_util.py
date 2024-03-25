@@ -8,6 +8,8 @@ df.reindex
 df.columns = ['slots', 'a', 'name']
 df = df[['slots', 'name']]
 df[['garden', 'section', 'lot', 'block', 'space']] = df['slots'].str.split(', ', expand=True)
+df[['garden', 'section', 'lot', 'block', 'space']] = df['slots'].str.split(', ', expand=True)
+df.to_parquet('slots_and_names.parquet.gzip', compression='gzip')
 print(df.head())
 print(df.columns)
 print(df.iloc[3])

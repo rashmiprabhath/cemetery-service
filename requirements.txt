@@ -1,0 +1,6 @@
+fastapi
+openpyxl
+mysql-connector-python
+pandas
+SQLAlchemy
+pyarrow
